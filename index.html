@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOLTUNIVERSE</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    /* Starry universe canvas */
+    #starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 50px;
+    }
+
+    /* MOLTUNIVERSE title - alien font style with Red Lobster red */
+    .title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2rem, 8vw, 5rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      background: linear-gradient(180deg, #d4231a 0%, #b71c1c 30%, #ff3d2e 50%, #d4231a 70%, #8b1a1a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 20px rgba(212, 35, 26, 0.6)) drop-shadow(0 0 60px rgba(212, 35, 26, 0.3));
+      text-shadow: none;
+      animation: titlePulse 3s ease-in-out infinite;
+      user-select: none;
+    }
+
+    @keyframes titlePulse {
+      0%, 100% { filter: drop-shadow(0 0 20px rgba(212, 35, 26, 0.6)) drop-shadow(0 0 60px rgba(212, 35, 26, 0.3)); }
+      50% { filter: drop-shadow(0 0 30px rgba(255, 61, 46, 0.8)) drop-shadow(0 0 80px rgba(212, 35, 26, 0.5)); }
+    }
+
+    /* Alien glyph decorations */
+    .title::before,
+    .title::after {
+      font-size: 0.5em;
+      -webkit-text-fill-color: rgba(212, 35, 26, 0.5);
+      vertical-align: middle;
+    }
+    .title::before { content: "◬ ⟁ "; }
+    .title::after { content: " ⟁ ◬"; }
+
+    /* Livestream screen */
+    .screen-container {
+      position: relative;
+    }
+
+    .screen-link {
+      display: block;
+      width: clamp(260px, 50vw, 420px);
+      height: clamp(160px, 30vw, 260px);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      background: rgba(10, 10, 10, 0.85);
+      overflow: hidden;
+      text-decoration: none;
+      position: relative;
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+      cursor: pointer;
+    }
+
+    .screen-link:hover {
+      border-color: rgba(212, 35, 26, 0.6);
+      box-shadow: 0 0 30px rgba(212, 35, 26, 0.3), inset 0 0 30px rgba(212, 35, 26, 0.05);
+      transform: scale(1.03);
+    }
+
+    /* CRT scanline effect */
+    .screen-link::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, 0.015) 2px,
+        rgba(255, 255, 255, 0.015) 4px
+      );
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Screen inner content */
+    .screen-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .play-icon {
+      width: 50px;
+      height: 50px;
+      border: 2px solid rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.3s, background 0.3s;
+    }
+
+    .screen-link:hover .play-icon {
+      border-color: #d4231a;
+      background: rgba(212, 35, 26, 0.15);
+    }
+
+    .play-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: rgba(255, 255, 255, 0.8);
+      margin-left: 3px;
+      transition: fill 0.3s;
+    }
+
+    .screen-link:hover .play-icon svg {
+      fill: #ff3d2e;
+    }
+
+    .screen-label {
+      color: rgba(255, 255, 255, 0.5);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    .screen-link:hover .screen-label {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Live badge */
+    .live-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #d4231a;
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.55rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.15em;
+      animation: liveBlink 1.5s ease-in-out infinite;
+      z-index: 3;
+    }
+
+    @keyframes liveBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* Subtle static noise overlay */
+    .noise {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Screen bezel reflection */
+    .screen-link::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 40%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+      pointer-events: none;
+      border-radius: 12px 12px 0 0;
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="starfield"></canvas>
+
+  <div class="content">
+    <h1 class="title">MOLTUNIVERSE</h1>
+
+    <div class="screen-container">
+      <a class="screen-link" href="https://www.youtube.com/live" target="_blank" rel="noopener noreferrer">
+        <div class="live-badge">LIVE</div>
+        <div class="noise"></div>
+        <div class="screen-inner">
+          <div class="play-icon">
+            <svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19"/></svg>
+          </div>
+          <span class="screen-label">Enter Livestream</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // --- Starry Universe ---
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    let w, h, stars, shootingStars;
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+
+    function createStars(count) {
+      const arr = [];
+      for (let i = 0; i < count; i++) {
+        arr.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: Math.random() * 1.6 + 0.3,
+          brightness: Math.random(),
+          speed: Math.random() * 0.0008 + 0.0003,
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+      return arr;
+    }
+
+    function createShootingStar() {
+      return {
+        x: Math.random() * w,
+        y: Math.random() * h * 0.5,
+        len: Math.random() * 80 + 40,
+        speed: Math.random() * 6 + 4,
+        angle: Math.PI / 4 + (Math.random() - 0.5) * 0.3,
+        opacity: 1,
+        active: true
+      };
+    }
+
+    shootingStars = [];
+
+    function init() {
+      resize();
+      stars = createStars(600);
+    }
+
+    let time = 0;
+    function draw() {
+      time += 16;
+      ctx.clearRect(0, 0, w, h);
+
+      // Background gradient - deep space
+      const grad = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, Math.max(w, h) * 0.7);
+      grad.addColorStop(0, '#0a0a12');
+      grad.addColorStop(0.5, '#050508');
+      grad.addColorStop(1, '#000000');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw stars
+      for (const s of stars) {
+        const twinkle = 0.5 + 0.5 * Math.sin(time * s.speed + s.phase);
+        const alpha = s.brightness * 0.4 + twinkle * 0.6;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+        ctx.fill();
+
+        // Subtle glow on brighter stars
+        if (s.r > 1.2) {
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r * 3, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${alpha * 0.08})`;
+          ctx.fill();
+        }
+      }
+
+      // Shooting stars
+      if (Math.random() < 0.003) {
+        shootingStars.push(createShootingStar());
+      }
+
+      for (let i = shootingStars.length - 1; i >= 0; i--) {
+        const ss = shootingStars[i];
+        ss.x += Math.cos(ss.angle) * ss.speed;
+        ss.y += Math.sin(ss.angle) * ss.speed;
+        ss.opacity -= 0.012;
+
+        if (ss.opacity <= 0 || ss.x > w + 100 || ss.y > h + 100) {
+          shootingStars.splice(i, 1);
+          continue;
+        }
+
+        const tailX = ss.x - Math.cos(ss.angle) * ss.len;
+        const tailY = ss.y - Math.sin(ss.angle) * ss.len;
+        const gradient = ctx.createLinearGradient(tailX, tailY, ss.x, ss.y);
+        gradient.addColorStop(0, `rgba(255, 255, 255, 0)`);
+        gradient.addColorStop(1, `rgba(255, 255, 255, ${ss.opacity})`);
+
+        ctx.beginPath();
+        ctx.moveTo(tailX, tailY);
+        ctx.lineTo(ss.x, ss.y);
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', () => {
+      resize();
+      stars = createStars(600);
+    });
+
+    init();
+    draw();
+  </script>
+</body>
+</html>
