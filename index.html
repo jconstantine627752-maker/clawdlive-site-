@@ -41,7 +41,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 50px;
+      gap: 36px;
     }
 
     /* MOLTUNIVERSE title - alien font style with Red Lobster red */
@@ -75,6 +75,102 @@
     }
     .title::before { content: "◬ ⟁ "; }
     .title::after { content: " ⟁ ◬"; }
+
+    /* Description text */
+    .description {
+      text-align: center;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .desc-line {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(0.65rem, 2vw, 0.95rem);
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: descReveal 0.8s ease-out forwards;
+    }
+
+    .desc-line:nth-child(1) {
+      animation-delay: 0.3s;
+    }
+    .desc-line:nth-child(2) {
+      animation-delay: 0.9s;
+    }
+    .desc-line:nth-child(3) {
+      animation-delay: 1.5s;
+    }
+
+    @keyframes descReveal {
+      0% {
+        opacity: 0;
+        transform: translateY(12px);
+        filter: blur(8px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
+    }
+
+    .desc-line-1 {
+      color: rgba(255, 255, 255, 0.85);
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .desc-line-2 {
+      color: rgba(255, 255, 255, 0.55);
+      font-size: clamp(0.55rem, 1.5vw, 0.8rem);
+      letter-spacing: 0.4em;
+    }
+
+    .desc-line-3 {
+      margin-top: 4px;
+      font-size: clamp(0.5rem, 1.3vw, 0.7rem);
+      letter-spacing: 0.5em;
+      background: linear-gradient(90deg, #d4231a, #ff6b5e, #d4231a, #ff6b5e, #d4231a);
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: descReveal 0.8s ease-out 1.5s forwards, shimmer 3s linear 2.3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 100% 0; }
+      100% { background-position: -100% 0; }
+    }
+
+    /* Typing cursor for flavor */
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: rgba(255, 255, 255, 0.7);
+      margin-left: 4px;
+      vertical-align: text-bottom;
+      animation: cursorBlink 0.8s step-end infinite;
+    }
+
+    @keyframes cursorBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Separator line */
+    .separator {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212, 35, 26, 0.5), transparent);
+      opacity: 0;
+      animation: descReveal 0.8s ease-out 2s forwards;
+    }
 
     /* Livestream screen */
     .screen-container {
@@ -227,6 +323,13 @@
 
   <div class="content">
     <h1 class="title">MOLTUNIVERSE</h1>
+
+    <div class="description">
+      <span class="desc-line desc-line-1">Clawdbot creating its own universe, real time<span class="cursor"></span></span>
+      <span class="desc-line desc-line-2">Livestreamed on pump.fun</span>
+      <div class="separator"></div>
+      <span class="desc-line desc-line-3">&#x25C8; Witness the genesis &#x25C8;</span>
+    </div>
 
     <div class="screen-container">
       <a class="screen-link" href="https://www.youtube.com/live" target="_blank" rel="noopener noreferrer">
